@@ -4,9 +4,7 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  define: {
-    // Isso garante que códigos legados usando process.env não quebrem,
-    // mas o ideal é usar import.meta.env no Vercel.
-    'process.env': {}
-  }
+  // Removemos o define: { 'process.env': {} } pois ele sobrescrevia
+  // o objeto process globalmente, impedindo a verificação correta
+  // de variáveis de ambiente no nosso helper getApiKey.
 });
