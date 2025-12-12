@@ -1,8 +1,24 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
-// Fixed: Use process.env.API_KEY directly as per @google/genai guidelines.
-// This also resolves the TypeScript error regarding import.meta.env.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Função helper para acessar chaves de API com segurança em ambientes Vite e Node
+const getApiKey = () => {
+  const meta = import.meta as any;
+  
+  // Verifica se meta.env existe antes de tentar acessar VITE_API_KEY
+  if (meta && meta.env && meta.env.VITE_API_KEY) {
+    return meta.env.VITE_API_KEY;
+  }
+  
+  // Fallback seguro para process.env
+  if (typeof process !== 'undefined' && process.env) {
+    return process.env.API_KEY;
+  }
+  
+  return "";
+};
+
+const apiKey = getApiKey();
+const ai = new GoogleGenAI({ apiKey: apiKey });
 
 const CATEGORIZER_INSTRUCTION = `
 Você é um assistente especialista em operações empresariais. 
